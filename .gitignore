@@ -25,3 +25,7 @@ proguard/
 
 # Log Files
 *.log
+
+# Backups (git handles this for us)
+*.bak
+*.*~
