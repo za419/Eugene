@@ -19,8 +19,6 @@ import android.os.Build;
 import android.text.InputType;
 import android.content.Context;
 import android.animation.LayoutTransition;
-import android.annotation.TargetApi;
-
 import java.util.Random;
 import java.util.HashMap;
 import java.lang.Character;
@@ -34,7 +32,7 @@ public class Eugene extends Activity
 	private final boolean easterEggs=true; // Controls if easter eggs are displayed.
 	private final boolean preserveTheFourthWall=false; // Controls if special easter eggs that break any illusion of reality are disabled.
 	private final boolean forceEasterEggs=false; // If true, will force probability of easter egg trigerring to 100%. Has no effect on special input easter eggs.
-	
+
 	// App-controlling constants.
 	private final int priorityOffset=2; // Added to NORM_PRIORITY for the UI thread, and subtracted from it for other threads.
 	private final float pauseMultiplier=1.0f; // Multiplied by parameters to pause() to get real pause length. Acts as a global speed control.
@@ -47,7 +45,7 @@ public class Eugene extends Activity
 
 	// A stored reference to this object, just to ensure availability.
 	protected Eugene t=this;
-	
+
 	// Stored static references to comparison objects,for optimization.
 	private HashMap<String, Integer> feelComp=null; // Lookup table for feelings. Initialized by initFeelComp(): Additions should be made there.
 	private HashMap<String, Integer> weatherComp=null; // Lookup table for weather ratings. Initialized by initWeatherComp(): Additions should be made there.
@@ -96,7 +94,7 @@ public class Eugene extends Activity
 		super.onCreate(savedInstanceState); // Create the activity
 
 		log("Initializing data...");
-		
+
 		// Create and display the views active at the beginning of operation
 		tv=new TextView (this);
 		tv.setText(null);
@@ -106,7 +104,7 @@ public class Eugene extends Activity
 		sv=new ScrollView (this);
 		sv.addView(rl);
 		setContentView(sv);
-		
+
 		Random gen=new Random(); // For random generation throughout creation.
 
 		// Initialize our TextView, and store all the necessary data to recreate it.
@@ -120,17 +118,17 @@ public class Eugene extends Activity
 			sv.setBackgroundColor(Color.BLACK);
 		tv.setShadowLayer(shadowSize, shadowSize, shadowSize, darkenColor(desaturateColor(tv_color, shadowDesaturate), shadowDarken));
 		final String fonts[]={
-			"RyanTrace",
-			"RyanHand",
-			"AnnaHand",
-			"RyanCursive"
-			};
+				"RyanTrace",
+				"RyanHand",
+				"AnnaHand",
+				"RyanCursive"
+		};
 		int font;
 		font=gen.nextInt(fonts.length);
 		tv_font=Typeface.createFromAsset(getAssets(), "fonts/"+fonts[font]+".ttf");
 		tv.setTypeface(tv_font);
 		tv.setTextSize(textSize);
-		
+
 		// Generate the style for EditText views
 		int ccolors[]; // Colors compatible with the TextView color, for the EditView.
 		switch (tv_color) // Ensure that we use an appropriate color, given the TextView color.
@@ -184,12 +182,12 @@ public class Eugene extends Activity
 		initFeelComp();
 		initWeatherComp();
 		initTopicComp();
-		
+
 		if (Build.VERSION.SDK_INT>=11) // If supported...
 			rl.setLayoutTransition(new LayoutTransition()); // Enable default layout animations
-		
+
 		log("Data initialized. Entering main loop...");
-		
+
 		// Start Eugene in a new thread
 		Thread proc=new Thread(new Runnable ()
 		{
@@ -204,7 +202,7 @@ public class Eugene extends Activity
 		proc.setPriority(Thread.NORM_PRIORITY-priorityOffset);
 		Thread.currentThread().setPriority(Thread.NORM_PRIORITY+priorityOffset);
 	}
-	
+
 	public void runStage () // More properly, should be runOutput(). Handles the initial output for each stage.
 	{
 		Random gen=new Random(); // For random generation.
@@ -576,7 +574,7 @@ public class Eugene extends Activity
 			break;
 		case 3:
 			log("Stage 3 output...");
-			
+
 			for (; substage<3; ++substage)
 			{
 				switch (substage)
@@ -992,7 +990,7 @@ public class Eugene extends Activity
 		}
 		substage=0;
 	}
-	
+
 	public void parseInput() // Handle the situation once the user enters input. Parse and assign state data, and signal the UI thread to normalize the views.
 	{
 		input=false; // Make sure we don't accidentally try to fetch new input while parsing input.
@@ -1034,7 +1032,7 @@ public class Eugene extends Activity
 			else
 			{
 				name=stripString(inputMessage, true, true, false, false);
-				
+
 				if (null==name || "".equals(name)) // Since we can't really afford to have a null name, trigger a special dialogue for remedying the situation.
 				{
 					pause(gen.nextInt(1000)+gen.nextInt(500)+50);
@@ -1044,7 +1042,7 @@ public class Eugene extends Activity
 				else
 				{
 					String words[]=name.split(" "); // Split into words, for recognition.
-					
+
 					// This pattern-based recognition works, but it is VERY limited. Replace it.
 					if (words.length==2 && "Im".equalsIgnoreCase(words[0])) // Match the "I'm {name}." pattern.
 						name=words[1];
@@ -1100,7 +1098,7 @@ public class Eugene extends Activity
 			{
 				rateWeather=stripString(inputMessage, true, true, true, true);
 				parsedRateWeather=parseWeather(rateWeather);
-				
+
 			}
 			log("Stage 2 input complete.");
 			break;
@@ -1151,7 +1149,7 @@ public class Eugene extends Activity
 		log("Specsubstage: "+substage);
 		pause(gen.nextInt(1000)+gen.nextInt(500)+50);
 	}
-	
+
 	public void onEnd() // Called when saying goodbye. Terminal output and logging.
 	{
 		Adapter tv=new Adapter(); // To handle our output.
@@ -1178,9 +1176,9 @@ public class Eugene extends Activity
 			}
 		}
 		tv.append("Bye!\nIt\'s been "+how+"!\n");
-		
+
 		log("Main loop complete. Exiting...");
-		
+
 		// Log state data, in case someone wants it.
 		log("Data dump:");
 		log("\tStage: "+stage);
@@ -1192,7 +1190,7 @@ public class Eugene extends Activity
 		log("\tParsedRateWeather: "+parsedRateWeather);
 		log("\tMyRateWeather: "+myRateWeather);
 		log("\tDoNotContinue: "+DoNotContinue);
-		
+
 		// Just in case the user sticks around
 		pause(gen.nextInt(60000)+60000);
 		tv.append("Why are you still here?!\n \n \nI said I couldn\'t continue the conversation...\n");
@@ -1235,7 +1233,7 @@ public class Eugene extends Activity
 				t.onCreate(new Bundle());
 			}
 		});
-    }
+	}
 
 	Handler displayHandler=new Handler()
 	{
@@ -1311,7 +1309,7 @@ public class Eugene extends Activity
 			}
 		}
 	};
-	
+
 	private Handler tvAttachHandler=new Handler () // Add a new TextView, and disable interaction with the EditText (cheaper than copying it into a new TextView.)
 	{
 		@Override
@@ -1324,10 +1322,10 @@ public class Eugene extends Activity
 			ev.setLongClickable(false);
 			ev.setText(ev.getText().toString(), TextView.BufferType.valueOf("NORMAL"));
 			ev.setHint(null); // Clear the hint
-			
+
 			// Close the soft keyboard, now that there's nothing for it to write to.
 			((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(ev.getWindowToken(), 0);
-			
+
 			// Set up and add a new TextView.
 			RelativeLayout.LayoutParams param=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 			param.addRule(RelativeLayout.BELOW, ev.getId());
@@ -1340,12 +1338,12 @@ public class Eugene extends Activity
 			rl.addView(tv, param);
 		}
 	};
-	
+
 	/* Adapter: Acts as an intermediary to allow code written for TextView to be run off the UI thread.
-	** While we're at it, we also handle typing here.
-	** This class made migration much easier when switching off of the old on-UI thread system.
-	** Any future expansion for output should also be made here 
-	*/
+	 ** While we're at it, we also handle typing here.
+	 ** This class made migration much easier when switching off of the old on-UI thread system.
+	 ** Any future expansion for output should also be made here 
+	 */
 	private class Adapter // Handle output in lines.
 	{
 		protected Random gen;
@@ -1366,7 +1364,7 @@ public class Eugene extends Activity
 			input=false; // We don't usually want to get input twice in a row. Auto-disable input so accidents don't happen.
 		}
 	}
-	
+
 	protected void sendUIMessage (String message, boolean canInput, String hint, boolean canScroll) // Send a full message to the UI.
 	{
 		Message m=Message.obtain();
@@ -1375,7 +1373,7 @@ public class Eugene extends Activity
 		m.setTarget(t.displayHandler);
 		m.sendToTarget();
 	}
-	
+
 	protected void sendUICharacter (char c, boolean canScroll) // Send a single character to the UI. No input or input hint. Pause to simulate typing.
 	{
 		Message m=Message.obtain();
@@ -1440,7 +1438,7 @@ public class Eugene extends Activity
 			feelComp.put("fantabulous", 5);
 		}
 	}
-	
+
 	private int parseFeeling(String feeling) // Take a string containing feeling, probably from the user, and try to simplify it down to a single feeling code.
 	{
 		feeling=stripString(feeling, true, true, true, true); // Facilitate recognition. That is what stripString() is truly meant for...
@@ -1454,7 +1452,7 @@ public class Eugene extends Activity
 		else if (words.length==4 && "i".equals(words[0]) && "am".equals(words[1]) && ("feeling".equals(words[2]) || "doing".equals(words[2]))) // Match the "I am {feeling}." pattern.
 			feeling=words[3];
 		feeling=feeling.trim();
-		
+
 		if (feelComp.containsKey(feeling))
 			return ((Integer)feelComp.get(feeling)).intValue();
 		else
@@ -1463,7 +1461,7 @@ public class Eugene extends Activity
 			return -1; // We have no idea what this string means.
 		}
 	}
-	
+
 	private String unparseFeeling(int feeling) // Change a feeling code into a user-friendly feeling string.
 	{
 		Random gen=new Random(); // Add some randomness to our unparsings.
@@ -1472,43 +1470,43 @@ public class Eugene extends Activity
 		{
 		case 0:
 			out=new String [] {
-				"terrible",
-				"horrible",
-				"dismal",
-				"abysmal"
-				};
+					"terrible",
+					"horrible",
+					"dismal",
+					"abysmal"
+			};
 			break;
 		case 1:
 			out=new String [] {
-				"awful",
-				"bad"
-				};
+					"awful",
+					"bad"
+			};
 			break;
 		case 2:
 			out=new String [] {
-				"alright",
-				"fine",
-				"okay",
-				"OK"
-				};
+					"alright",
+					"fine",
+					"okay",
+					"OK"
+			};
 			break;
 		case 3:
 			return "good";
 		case 4:
 			out=new String [] {
-				"great",
-				"excellent"
-				};
+					"great",
+					"excellent"
+			};
 			break;
 		case 5:
 			if (easterEggs && (forceEasterEggs || gen.nextInt(200)==0))
 				return "fantabulous";
 			out=new String [] {
-				"amazing",
-				"incredible",
-				"fabulous",
-				"fantastic"
-				};
+					"amazing",
+					"incredible",
+					"fabulous",
+					"fantastic"
+			};
 			break;
 		default:
 			logError("Unknown feeling code passed to unparseFeeling(): "+feeling+". Assumed \"uneasy\".");
@@ -1572,7 +1570,7 @@ public class Eugene extends Activity
 			weatherComp.put("fantabulous", 5);
 		}
 	}
-	
+
 	private int parseWeather(String weather) // Take a string containing a weather opinion, and try to simplify it down to a weather code.
 	{
 		weather=stripString(weather, true, true, true, true); // Facilitate recognition. That is what stripString() is meant for!
@@ -1596,7 +1594,7 @@ public class Eugene extends Activity
 			return -1;
 		}
 	}
-	
+
 	private String unparseWeather(int weather) // Change a weather code into a user-friendly weather string.
 	{
 		Random gen=new Random(); // Throw some randomness into the mix.
@@ -1605,58 +1603,58 @@ public class Eugene extends Activity
 		{
 		case 0:
 			out=new String [] {
-				"dismal",
-				"abysmal",
-				"horrible",
-				"terrible",
-				"inhospitable",
-				"unlivable",
-				"unsurvivable"
-				};
+					"dismal",
+					"abysmal",
+					"horrible",
+					"terrible",
+					"inhospitable",
+					"unlivable",
+					"unsurvivable"
+			};
 			break;
 		case 1:
 			out=new String [] {
-				"awful",
-				"uncomfortable",
-				"unpleasant",
-				"fierce",
-				"bad"
-				};
+					"awful",
+					"uncomfortable",
+					"unpleasant",
+					"fierce",
+					"bad"
+			};
 			break;
 		case 2:
 			out=new String [] {
-				"ordinary",
-				"normal",
-				"okay",
-				"OK",
-				"average"
-				};
+					"ordinary",
+					"normal",
+					"okay",
+					"OK",
+					"average"
+			};
 			break;
 		case 3:
 			out=new String [] {
-				"good",
-				"nice",
-				"calm",
-				"fair"
-				};
+					"good",
+					"nice",
+					"calm",
+					"fair"
+			};
 			break;
 		case 4:
 			out=new String [] {
-				"great",
-				"lovely",
-				"uplifting",
-				"excellent"
-				};
+					"great",
+					"lovely",
+					"uplifting",
+					"excellent"
+			};
 			break;
 		case 5:
 			if (easterEggs && (forceEasterEggs || gen.nextInt(200)==0))
 				return "fantabulous";
 			out=new String [] {
-				"amazing",
-				"incredible",
-				"fabulous",
-				"fantastic"
-				};
+					"amazing",
+					"incredible",
+					"fabulous",
+					"fantastic"
+			};
 			break;
 		default:
 			logError("Unknown weather code passed to unparseWeather(): "+weather+". Assumed \"confusing\".");
@@ -1671,19 +1669,19 @@ public class Eugene extends Activity
 		{
 			// Widen recognition
 			topicComp=new HashMap<String, Integer>();
-			
+
 			// 0s
 			topicComp.put("me", 0);
-			
+
 			// 1s
 			topicComp.put("you", 1);
-			
+
 			// 2s
 			topicComp.put("politics", 2);
 			topicComp.put("politicians", 2);
 		}
 	}
-	
+
 	private int parseTopic(String topic)
 	{
 		topic=stripString(topic, true, true, true, true);
@@ -1705,9 +1703,9 @@ public class Eugene extends Activity
 			return -1;
 		}
 	}
-	
+
 	// No unparseTopic(), since Eugene doesn't have a topic.
-	
+
 	private int darkenColor(int color, float factor) // Darken a color by a specified factor.
 	{
 		// NOTE: This uses HSV value-darkening.
@@ -1717,7 +1715,7 @@ public class Eugene extends Activity
 		return Color.HSVToColor(HSV);
 		// TODO: Find a way to darken this perceptually, not by HSV value.
 	}
-	
+
 	private int desaturateColor(int color, float factor)
 	{
 		float HSV[]={0,0,0};
@@ -1725,12 +1723,12 @@ public class Eugene extends Activity
 		HSV[1]/=factor;
 		return Color.HSVToColor(HSV);
 	}
-	
+
 	private String stripString(String str, boolean stripPunct, boolean replaceWS, boolean lowered, boolean stripNums) // Strip out unrecognized characters from a string. This is meant to be used for recognition, so that strange characters don\'t affect the input.
 	{
 		return stripString(str, stripPunct, replaceWS, lowered, stripNums, " ");
 	}
-	
+
 	private String stripString(String str, boolean stripPunct, boolean replaceWS, boolean lowered, boolean stripNums, String replaceWSWith) // Strip out unrecognized characters from a string. This is meant to be used for recognition, so that strange characters don\'t affect the input. Just in case, add a WS-representing string.
 	{
 		String out="";
@@ -1749,12 +1747,12 @@ public class Eugene extends Activity
 		}
 		return out;
 	}
-	
+
 	private String capitalize(String str) // Capitalize the fist character of a string. Usually, this can be used to guarantee that an output is gramatically correct.
 	{
 		return new String(Character.toUpperCase(str.charAt(0))+str.substring(1));
 	}
-	
+
 	private void pause(long ms) // Pause for an integer number of milliseconds.
 	{
 		ms*=pauseMultiplier;
@@ -1772,7 +1770,7 @@ public class Eugene extends Activity
 			}
 		}
 	}
-	
+
 	private void pause (double ms) // Wait for a potentially fractional number of milliseconds.
 	{
 		ms*=pauseMultiplier;
@@ -1793,35 +1791,35 @@ public class Eugene extends Activity
 			}
 		}
 	}
-	
+
 	private void log (String message) // Log an informational message.
 	{
 		if (debugging) // Log.d() wasn't working when I wrote this. This is a workaround.
 			Log.i(LogTag, message); // Don't worry, there is occasionally a method to my madness.
 	}
-	
+
 	private void logWarning (String message) // Log a warning message.
 	{
 		Log.w(LogTag, message);
 	}
-	
+
 	private void logError (String message) // Log an error message.
 	{
 		Log.e(LogTag, message);
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void logWTF (String message) // I couldn't resist. Log an unrecoverable error, but leave it up to the API if the app should crash.
 	{
 		Log.wtf(LogTag, message);
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void logWTF (String message, Throwable tr) // Use this for unrecoverable errors (I'm not sure what one of these would be, but...)
 	{
 		Log.wtf(LogTag, message, tr);
 	}
-	
+
 	public class data extends Object // Data for UI messages.
 	{
 		public data(String m, boolean i, String h, boolean s)
