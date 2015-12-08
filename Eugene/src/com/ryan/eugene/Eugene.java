@@ -1735,7 +1735,7 @@ public class Eugene extends Activity
 	{
 		float HSV[]={0,0,0};
 		Color.colorToHSV(color, HSV);
-		HSV[2]/=factor;
+		HSV[1]/=factor;
 		return Color.HSVToColor(HSV);
 	}
 	
