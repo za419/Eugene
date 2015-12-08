@@ -19,6 +19,8 @@ import android.os.Build;
 import android.text.InputType;
 import android.content.Context;
 import android.animation.LayoutTransition;
+import android.annotation.TargetApi;
+
 import java.util.Random;
 import java.util.HashMap;
 import java.lang.Character;
@@ -35,7 +37,7 @@ public class Eugene extends Activity
 	
 	// App-controlling constants.
 	private final int priorityOffset=2; // Added to NORM_PRIORITY for the UI thread, and subtracted from it for other threads.
-	private final float pauseMultiplier=1.0f; // Muliplied by parameters to pause() to get real pause length. Acts as a global speed control.
+	private final float pauseMultiplier=1.0f; // Multiplied by parameters to pause() to get real pause length. Acts as a global speed control.
 
 	// Currently active views
 	private TextView tv; // For primary textual display.
@@ -47,9 +49,9 @@ public class Eugene extends Activity
 	protected Eugene t=this;
 	
 	// Stored static references to comparison objects,for optimization.
-	private HashMap feelComp=null; // Lookup table for feelings. Initialized by initFeelComp(): Additions should be made there.
-	private HashMap weatherComp=null; // Lookup table for weather ratings. Initialized by initWeatherComp(): Additions should be made there.
-	private HashMap topicComp=null; // Lookup table for topics. Initialized by initTopicComp(): Additons shluld be made there.
+	private HashMap<String, Integer> feelComp=null; // Lookup table for feelings. Initialized by initFeelComp(): Additions should be made there.
+	private HashMap<String, Integer> weatherComp=null; // Lookup table for weather ratings. Initialized by initWeatherComp(): Additions should be made there.
+	private HashMap<String, Integer> topicComp=null; // Lookup table for topics. Initialized by initTopicComp(): Additons shluld be made there.
 
 	// Global string constants
 	private final String errStr="I\'m sorry, I am experiencing an issue right now... Let\'s try this again, shall we?\n"; // In case a recoverable error occurs.
@@ -100,7 +102,7 @@ public class Eugene extends Activity
 		tv.setText(null);
 		tv.setId(1);
 		rl=new RelativeLayout (this);
-		rl.addView(tv, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+		rl.addView(tv, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
 		sv=new ScrollView (this);
 		sv.addView(rl);
 		setContentView(sv);
@@ -131,7 +133,7 @@ public class Eugene extends Activity
 		
 		// Generate the style for EditText views
 		int ccolors[]; // Colors compatible with the TextView color, for the EditView.
-		switch (tv_color) // Ensure that we use an appropiate color, given the TextView color.
+		switch (tv_color) // Ensure that we use an appropriate color, given the TextView color.
 		{
 		case Color.GREEN:
 			ccolors=new int[] {Color.RED, Color.CYAN, Color.MAGENTA, Color.WHITE, Color.YELLOW, Color.LTGRAY, Color.GRAY};
@@ -1119,7 +1121,7 @@ public class Eugene extends Activity
 				if (misc!=-1 && (inputMessage==null || inputMessage.equals("") || inputMessage.equalsIgnoreCase("no") || inputMessage.equalsIgnoreCase("nope"))) // if the user entered nothing or replied in the negative...
 				{
 					tv.append("Why not?\nRhetorical question.\n \n\"He who does not read has no advantage over he who cannot read.\"\n    --Mark Twain.\n\nYou should listen to him.\n\nThe Game of Thrones series is very good...\n \n"); // Yell at the user for not listening to you
-					substage=1; // Skip the stage where we comment of their book.
+					substage=1; // Skip the stage where we comment on their book.
 				}
 			}
 			log("Stage 3 input complete.");
@@ -1265,7 +1267,7 @@ public class Eugene extends Activity
 				}
 				else
 				{
-					RelativeLayout.LayoutParams param=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+					RelativeLayout.LayoutParams param=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 					param.addRule(RelativeLayout.BELOW, tv.getId());
 					ev.setTextColor(ev_color);
 					ev.setBackground(new ColorDrawable(Color.argb(50, 128, 128, 128))); // Set the background to be a very transparent gray
@@ -1327,7 +1329,7 @@ public class Eugene extends Activity
 			((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(ev.getWindowToken(), 0);
 			
 			// Set up and add a new TextView.
-			RelativeLayout.LayoutParams param=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			RelativeLayout.LayoutParams param=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 			param.addRule(RelativeLayout.BELOW, ev.getId());
 			tv=new TextView(t);
 			tv.setTypeface(tv_font);
@@ -1401,7 +1403,7 @@ public class Eugene extends Activity
 		if (feelComp==null)
 		{
 			// Widen recognition
-			feelComp=new HashMap();
+			feelComp=new HashMap<String, Integer>();
 
 			// 0s
 			feelComp.put("terrible", 0);
@@ -1520,7 +1522,7 @@ public class Eugene extends Activity
 		if (weatherComp==null)
 		{
 			// Widen recognition
-			weatherComp=new HashMap();
+			weatherComp=new HashMap<String, Integer>();
 
 			// 0s
 			weatherComp.put("terrible", 0);
@@ -1574,8 +1576,8 @@ public class Eugene extends Activity
 	private int parseWeather(String weather) // Take a string containing a weather opinion, and try to simplify it down to a weather code.
 	{
 		weather=stripString(weather, true, true, true, true); // Facilitate recognition. That is what stripString() is meant for!
-		// Strip extraneous verbage.
-		// This extraneous verbage recognition works, but it is VERY limited. Replace it.
+		// Strip extraneous verbiage.
+		// This extraneous verbiage recognition works, but it is VERY limited. Replace it.
 		String words[]=weather.split(" ");
 		if (words.length==2 && "its".equals(words[0])) // Match the "It's {weather}." pattern.
 			weather=words[1];
@@ -1668,7 +1670,7 @@ public class Eugene extends Activity
 		if (topicComp==null)
 		{
 			// Widen recognition
-			topicComp=new HashMap();
+			topicComp=new HashMap<String, Integer>();
 			
 			// 0s
 			topicComp.put("me", 0);
@@ -1685,8 +1687,8 @@ public class Eugene extends Activity
 	private int parseTopic(String topic)
 	{
 		topic=stripString(topic, true, true, true, true);
-		// Strip extraneous verbage.
-		// This extraneous verbage recognition works, but it is extremely limited. Replace it.
+		// Strip extraneous verbiage.
+		// This extraneous verbiage recognition works, but it is extremely limited. Replace it.
 		String[] words=topic.split(" ");
 		if (words.length==2 && words[0].charAt(0)=='u' && words[0].charAt(1)=='m')
 			topic=words[1];
@@ -1756,12 +1758,12 @@ public class Eugene extends Activity
 	private void pause(long ms) // Pause for an integer number of milliseconds.
 	{
 		ms*=pauseMultiplier;
-		Thread t=Thread.currentThread(); // Shorthand, temporary. We access the current thread a LOT.
+		Thread t=Thread.currentThread(); // Shorthand, temporary.
 		synchronized (t)
 		{
 			try
 			{
-				t.sleep(ms);
+				Thread.sleep(ms);
 			}
 			catch(InterruptedException ie)
 			{
@@ -1782,7 +1784,7 @@ public class Eugene extends Activity
 		{
 			try
 			{
-				t.sleep(m, n);
+				Thread.sleep(m, n);
 			}
 			catch(InterruptedException ie)
 			{
@@ -1808,11 +1810,13 @@ public class Eugene extends Activity
 		Log.e(LogTag, message);
 	}
 	
+	@SuppressWarnings("unused")
 	private void logWTF (String message) // I couldn't resist. Log an unrecoverable error, but leave it up to the API if the app should crash.
 	{
 		Log.wtf(LogTag, message);
 	}
 	
+	@SuppressWarnings("unused")
 	private void logWTF (String message, Throwable tr) // Use this for unrecoverable errors (I'm not sure what one of these would be, but...)
 	{
 		Log.wtf(LogTag, message, tr);
