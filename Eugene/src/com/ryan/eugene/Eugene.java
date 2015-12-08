@@ -31,7 +31,7 @@ public class Eugene extends Activity
 	private final boolean debugging=false; // Controls debugging statements. Especially for logging.
 	private final boolean easterEggs=true; // Controls if easter eggs are displayed.
 	private final boolean preserveTheFourthWall=false; // Controls if special easter eggs that break any illusion of reality are disabled.
-	private final boolean forceEasterEggs=true; // If true, will force probability of easter egg trigerring to 100%. Has no effect on special input easter eggs.
+	private final boolean forceEasterEggs=false; // If true, will force probability of easter egg trigerring to 100%. Has no effect on special input easter eggs.
 	
 	// App-controlling constants.
 	private final int priorityOffset=2; // Added to NORM_PRIORITY for the UI thread, and subtracted from it for other threads.
@@ -97,7 +97,7 @@ public class Eugene extends Activity
 		
 		// Create and display the views active at the beginning of operation
 		tv=new TextView (this);
-		tv.setText("");
+		tv.setText(null);
 		tv.setId(1);
 		rl=new RelativeLayout (this);
 		rl.addView(tv, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
@@ -909,7 +909,7 @@ public class Eugene extends Activity
 						case 0:
 							tv.append("Huh.\nI actually haven\'t heard of that one...");
 							--stage; // Trick parseInput().
-							misc=-1; // Stop us from doig this again.
+							misc=-1; // Stop us from doing this again.
 							input=true;
 							tv.append("What\'s it about?");
 							pause(gen.nextInt(500)+500);
@@ -1336,7 +1336,7 @@ public class Eugene extends Activity
 			ev.setInputType(InputType.TYPE_NULL);
 			ev.setLongClickable(false);
 			ev.setText(ev.getText().toString(), TextView.BufferType.valueOf("NORMAL"));
-			ev.setHint(""); // Clear the hint
+			ev.setHint(null); // Clear the hint
 			
 			// Close the soft keyboard, now that there's nothing for it to write to.
 			((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(ev.getWindowToken(), 0);
@@ -1353,7 +1353,12 @@ public class Eugene extends Activity
 			rl.addView(tv, param);
 		}
 	};
-		
+	
+	/* Adapter: Acts as an intermediary to allow code written for TextView to be run off the UI thread.
+	** While we're at it, we also handle typing here.
+	** This class made migration much easier when switching off of the old on-UI thread system.
+	** Any future expansion for output should also be made here 
+	*/
 	private class Adapter // Handle output in lines.
 	{
 		protected Random gen;
@@ -1736,21 +1741,7 @@ public class Eugene extends Activity
 	
 	private String stripString(String str, boolean stripPunct, boolean replaceWS, boolean lowered, boolean stripNums) // Strip out unrecognized characters from a string. This is meant to be used for recognition, so that strange characters don\'t affect the input.
 	{
-		String out="";
-		for (int i=0; i<str.length(); ++i)
-		{
-			int type=java.lang.Character.getType(str.charAt(i));
-			if (type!=java.lang.Character.CONTROL && type!=java.lang.Character.FORMAT && type!=java.lang.Character.NON_SPACING_MARK && (!stripPunct || (type!=java.lang.Character.END_PUNCTUATION && type!=java.lang.Character.DASH_PUNCTUATION && type!=java.lang.Character.MATH_SYMBOL && type!=java.lang.Character.MODIFIER_SYMBOL && type!=java.lang.Character.OTHER_SYMBOL && type!=java.lang.Character.OTHER_PUNCTUATION && type!=java.lang.Character.START_PUNCTUATION && type!=java.lang.Character.CURRENCY_SYMBOL && type!=java.lang.Character.CONNECTOR_PUNCTUATION)) && (!stripNums || type!=java.lang.Character.OTHER_NUMBER))
-			{
-				if (replaceWS && (type==java.lang.Character.COMBINING_SPACING_MARK || type==java.lang.Character.LINE_SEPARATOR || type==java.lang.Character.PARAGRAPH_SEPARATOR || type==java.lang.Character.SPACE_SEPARATOR))
-					out+=" ";
-				else if (lowered)
-					out+=java.lang.Character.toLowerCase(str.charAt(i));
-				else
-					out+=str.charAt(i);
-			}
-		}
-		return out;
+		return stripString(str, stripPunct, replaceWS, lowered, stripNums, " ");
 	}
 	
 	private String stripString(String str, boolean stripPunct, boolean replaceWS, boolean lowered, boolean stripNums, String replaceWSWith) // Strip out unrecognized characters from a string. This is meant to be used for recognition, so that strange characters don\'t affect the input. Just in case, add a WS-representing string.
