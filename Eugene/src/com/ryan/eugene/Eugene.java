@@ -31,7 +31,7 @@ public class Eugene extends Activity
 	private final boolean debugging=false; // Controls debugging statements. Especially for logging.
 	private final boolean easterEggs=true; // Controls if easter eggs are displayed.
 	private final boolean preserveTheFourthWall=false; // Controls if special easter eggs that break any illusion of reality are disabled.
-	private final boolean forceEasterEggs=false; // If true, will force probability of easter egg trigerring to 100%. Has no effect on special input easter eggs.
+	private final boolean forceEasterEggs=false; // If true, will force probability of easter egg triggering to 100%. Has no effect on special input easter eggs.
 
 	// App-controlling constants.
 	private final int priorityOffset=2; // Added to NORM_PRIORITY for the UI thread, and subtracted from it for other threads.
@@ -49,7 +49,7 @@ public class Eugene extends Activity
 	// Stored static references to comparison objects,for optimization.
 	private HashMap<String, Integer> feelComp=null; // Lookup table for feelings. Initialized by initFeelComp(): Additions should be made there.
 	private HashMap<String, Integer> weatherComp=null; // Lookup table for weather ratings. Initialized by initWeatherComp(): Additions should be made there.
-	private HashMap<String, Integer> topicComp=null; // Lookup table for topics. Initialized by initTopicComp(): Additons shluld be made there.
+	private HashMap<String, Integer> topicComp=null; // Lookup table for topics. Initialized by initTopicComp(): Additions should be made there.
 
 	// Global string constants
 	private final String errStr="I\'m sorry, I am experiencing an issue right now... Let\'s try this again, shall we?\n"; // In case a recoverable error occurs.
