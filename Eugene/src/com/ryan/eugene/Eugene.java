@@ -111,7 +111,7 @@ public class Eugene extends Activity
 		final int colors []={Color.GREEN, Color.BLUE, Color.RED, Color.CYAN, Color.MAGENTA, Color.WHITE, Color.YELLOW, Color.LTGRAY, Color.DKGRAY, Color.GRAY, Color.BLACK/*, Color.rgb(0, 100, 0), Color.rgb(92, 64, 51), Color.rgb(142, 107, 35), Color.rgb(100, 0, 0), Color.rgb(0, 0, 100)*/};
 		tv_color=colors[gen.nextInt(colors.length)];
 		tv.setTextColor(tv_color);
-		final double brightness=Math.sqrt(.299f*Math.pow(Color.red(tv_color), 2)+.587*Math.pow(Color.green(tv_color), 2)+.114*Math.pow(Color.blue(tv_color), 2)); // Calculate the perceived brightness.
+		final double brightness=perceivedBrightness(tv_color); // Calculate the perceived brightness.
 		if (brightness<128)
 			sv.setBackgroundColor(Color.WHITE);
 		else
@@ -1722,6 +1722,11 @@ public class Eugene extends Activity
 		Color.colorToHSV(color, HSV);
 		HSV[1]/=factor;
 		return Color.HSVToColor(HSV);
+	}
+
+	public double perceivedBrightness(int col) // Calculates and returns the perceived brightness of the color represented by col
+	{
+		return Math.sqrt(.299f*Math.pow(Color.red(col), 2)+.587*Math.pow(Color.green(col), 2)+.114*Math.pow(Color.blue(col), 2));
 	}
 
 	private String stripString(String str, boolean stripPunct, boolean replaceWS, boolean lowered, boolean stripNums) // Strip out unrecognized characters from a string. This is meant to be used for recognition, so that strange characters don\'t affect the input.
