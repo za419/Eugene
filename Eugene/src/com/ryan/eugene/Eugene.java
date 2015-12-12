@@ -1465,6 +1465,9 @@ public class Eugene extends Activity
 		else if (words.length==4 && 
 				"i".equals(words[0]) && "am".equals(words[1]) && ("feeling".equals(words[2]) || "doing".equals(words[2]))) // Match the "I am {feeling}." pattern.
 			feeling=words[3];
+		else if (words.length==5 &&
+				"im".equals(words[0]) && "how".equals(words[2]) && "are".equals(words[3]) && "you".equals(words[4]))
+			feeling=words[1];
 		feeling=feeling.trim();
 
 		if (feelComp.containsKey(feeling))
