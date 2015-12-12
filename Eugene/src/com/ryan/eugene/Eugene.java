@@ -1044,21 +1044,32 @@ public class Eugene extends Activity
 					String words[]=name.split(" "); // Split into words, for recognition.
 
 					// This pattern-based recognition works, but it is VERY limited. Replace it.
-					if (words.length==2 && "Im".equalsIgnoreCase(words[0])) // Match the "I'm {name}." pattern.
+					if (words.length==2 &&
+							"Im".equalsIgnoreCase(words[0])) // Match the "I'm {name}." pattern.
 						name=words[1];
-					else if (words.length==3 && ("I".equalsIgnoreCase(words[0]) && "am".equalsIgnoreCase(words[1])) || ("Hi".equalsIgnoreCase(words[0]) && "Im".equalsIgnoreCase(words[1]))) // Match the "I am {name}." pattern, and the "Hi, I'm {name}." pattern.
+					else if (words.length==3 &&
+							("I".equalsIgnoreCase(words[0]) && "am".equalsIgnoreCase(words[1])) ||
+							("Hi".equalsIgnoreCase(words[0]) && "Im".equalsIgnoreCase(words[1]))) // Match the "I am {name}." pattern, and the "Hi, I'm {name}." pattern.
 						name=words[2];
-					else if (words.length==4 && (("My".equalsIgnoreCase(words[0]) && "name".equalsIgnoreCase(words[1]) && "is".equalsIgnoreCase(words[2])) || (("Hi".equalsIgnoreCase(words[0]) || "Hello".equalsIgnoreCase(words[0])) && ("I".equalsIgnoreCase(words[1]) && "am".equalsIgnoreCase(words[2])) || (myName.equalsIgnoreCase(words[1]) && "Im".equalsIgnoreCase(words[2]))))) // Match the "My name is {name} pattern, and the "Hi|Hello, I am {name}." pattern, and the "Hi|Hello Eugene, I'm {name}." pattern.
+					else if (words.length==4 &&
+							(("My".equalsIgnoreCase(words[0]) && "name".equalsIgnoreCase(words[1]) && "is".equalsIgnoreCase(words[2])) ||
+									(("Hi".equalsIgnoreCase(words[0]) || "Hello".equalsIgnoreCase(words[0])) && ("I".equalsIgnoreCase(words[1]) && "am".equalsIgnoreCase(words[2])) ||
+											(myName.equalsIgnoreCase(words[1]) && "Im".equalsIgnoreCase(words[2]))))) // Match the "My name is {name} pattern, and the "Hi|Hello, I am {name}." pattern, and the "Hi|Hello Eugene, I'm {name}." pattern.
 						name=words[3];
-					else if (words.length==4 && "is".equalsIgnoreCase(words[1]) && "my".equalsIgnoreCase(words[2]) && "name".equalsIgnoreCase(words[3])) // Match the "{name} is my name." pattern
+					else if (words.length==4 && "is".equalsIgnoreCase(words[1]) &&
+							"my".equalsIgnoreCase(words[2]) && "name".equalsIgnoreCase(words[3])) // Match the "{name} is my name." pattern
 						name=words[0];
-					else if (words.length==5 && ("Hi".equalsIgnoreCase(words[0]) || "Hello".equalsIgnoreCase(words[0])) && myName.equalsIgnoreCase(words[1]) && "I".equalsIgnoreCase(words[2]) && "am".equalsIgnoreCase(words[3])) // Match the "Hi|Hello Eugene, I am {name}." pattern.
+					else if (words.length==5 && 
+							("Hi".equalsIgnoreCase(words[0]) || "Hello".equalsIgnoreCase(words[0])) && myName.equalsIgnoreCase(words[1]) && "I".equalsIgnoreCase(words[2]) && "am".equalsIgnoreCase(words[3])) // Match the "Hi|Hello Eugene, I am {name}." pattern.
 						name=words[4];
-					else if (words.length==6 && ("Nice".equalsIgnoreCase(words[0]) || "Pleased".equalsIgnoreCase(words[0]) || "Happy".equalsIgnoreCase(words[0]) || "Good".equalsIgnoreCase(words[0])) && "to".equalsIgnoreCase(words[1]) && "meet".equalsIgnoreCase(words[2]) && ("ya".equalsIgnoreCase(words[3]) || "you".equalsIgnoreCase(words[3])) && "Im".equalsIgnoreCase(words[4])) // Match the "Nice|Pleased|Happy|Good to meed ya|you, I'm {name}." pattern.
+					else if (words.length==6 &&
+							("Nice".equalsIgnoreCase(words[0]) || "Pleased".equalsIgnoreCase(words[0]) || "Happy".equalsIgnoreCase(words[0]) || "Good".equalsIgnoreCase(words[0])) && "to".equalsIgnoreCase(words[1]) && "meet".equalsIgnoreCase(words[2]) && ("ya".equalsIgnoreCase(words[3]) || "you".equalsIgnoreCase(words[3])) && "Im".equalsIgnoreCase(words[4])) // Match the "Nice|Pleased|Happy|Good to meed ya|you, I'm {name}." pattern.
 						name=words[5];
-					else if (words.length==7 && ("Nice".equalsIgnoreCase(words[0]) || "Pleased".equalsIgnoreCase(words[0]) || "Happy".equalsIgnoreCase(words[0]) || "Good".equalsIgnoreCase(words[0])) && "to".equalsIgnoreCase(words[1]) && "meet".equalsIgnoreCase(words[2]) && ("ya".equalsIgnoreCase(words[3]) || "you".equalsIgnoreCase(words[3])) && "I".equalsIgnoreCase(words[4]) && "am".equalsIgnoreCase(words[5])) // Match the "Nice|Pleased|Happy|Good to meed ya|you, I am {name}." pattern.
+					else if (words.length==7 &&
+							("Nice".equalsIgnoreCase(words[0]) || "Pleased".equalsIgnoreCase(words[0]) || "Happy".equalsIgnoreCase(words[0]) || "Good".equalsIgnoreCase(words[0])) && "to".equalsIgnoreCase(words[1]) && "meet".equalsIgnoreCase(words[2]) && ("ya".equalsIgnoreCase(words[3]) || "you".equalsIgnoreCase(words[3])) && "I".equalsIgnoreCase(words[4]) && "am".equalsIgnoreCase(words[5])) // Match the "Nice|Pleased|Happy|Good to meed ya|you, I am {name}." pattern.
 						name=words[6];
-					else if (words.length==8 && "is".equalsIgnoreCase(words[1]) && "my".equalsIgnoreCase(words[2]) && "name".equalsIgnoreCase(words[3]) && "is".equalsIgnoreCase(words[5]) && "my".equalsIgnoreCase(words[6]) && "game".equalsIgnoreCase(words[7]))
+					else if (words.length==8 &&
+							"is".equalsIgnoreCase(words[1]) && "my".equalsIgnoreCase(words[2]) && "name".equalsIgnoreCase(words[3]) && "is".equalsIgnoreCase(words[5]) && "my".equalsIgnoreCase(words[6]) && "game".equalsIgnoreCase(words[7]))
 						name=words[0];
 					name=capitalize(name); // Make sure that name is capitalized.
 				}
@@ -1447,9 +1458,12 @@ public class Eugene extends Activity
 		String words[]=feeling.split(" ");
 		if (words.length==2 && "im".equals(words[0])) // Match the "I'm {feeling}" pattern.
 			feeling=words[1];
-		else if (words.length==3 && ("im".equals(words[0]) && ("feeling".equals(words[1]) || "doing".equals(words[1]))) || ("i".equals(words[0]) && "am".equals(words[1]))) // Match the "I'm feeling|doing {feeling}." pattern, and the "I am {feeling}." pattern.
+		else if (words.length==3 && 
+				("im".equals(words[0]) && ("feeling".equals(words[1]) || "doing".equals(words[1]))) || 
+				("i".equals(words[0]) && "am".equals(words[1]))) // Match the "I'm feeling|doing {feeling}." pattern, and the "I am {feeling}." pattern.
 			feeling=words[2];
-		else if (words.length==4 && "i".equals(words[0]) && "am".equals(words[1]) && ("feeling".equals(words[2]) || "doing".equals(words[2]))) // Match the "I am {feeling}." pattern.
+		else if (words.length==4 && 
+				"i".equals(words[0]) && "am".equals(words[1]) && ("feeling".equals(words[2]) || "doing".equals(words[2]))) // Match the "I am {feeling}." pattern.
 			feeling=words[3];
 		feeling=feeling.trim();
 
@@ -1577,13 +1591,17 @@ public class Eugene extends Activity
 		// Strip extraneous verbiage.
 		// This extraneous verbiage recognition works, but it is VERY limited. Replace it.
 		String words[]=weather.split(" ");
-		if (words.length==2 && "its".equals(words[0])) // Match the "It's {weather}." pattern.
+		if (words.length==2 &&
+				"its".equals(words[0])) // Match the "It's {weather}." pattern.
 			weather=words[1];
-		else if (words.length==3 && "it".equals(words[0]) && "is".equals(words[1])) // Match the "It is {weather}." pattern.
+		else if (words.length==3 &&
+				"it".equals(words[0]) && "is".equals(words[1])) // Match the "It is {weather}." pattern.
 			weather=words[2];
-		else if (words.length==4 && "i".equals(words[0]) && "think".equals(words[1]) && "its".equals(words[2])) // Match the "I think its {weather}." pattern.
+		else if (words.length==4 &&
+				"i".equals(words[0]) && "think".equals(words[1]) && "its".equals(words[2])) // Match the "I think its {weather}." pattern.
 			weather=words[3];
-		else if (words.length==5 && "i".equals(words[0]) && "think".equals(words[1]) && "it".equals(words[2]) && "is".equals(words[3])) // Match the "I think it is {weather}." pattern.
+		else if (words.length==5 &&
+				"i".equals(words[0]) && "think".equals(words[1]) && "it".equals(words[2]) && "is".equals(words[3])) // Match the "I think it is {weather}." pattern.
 			weather=words[4];
 		weather=weather.trim();
 		if (weatherComp.containsKey(weather))
@@ -1688,11 +1706,14 @@ public class Eugene extends Activity
 		// Strip extraneous verbiage.
 		// This extraneous verbiage recognition works, but it is extremely limited. Replace it.
 		String[] words=topic.split(" ");
-		if (words.length==2 && words[0].charAt(0)=='u' && words[0].charAt(1)=='m')
+		if (words.length==2 &&
+				words[0].charAt(0)=='u' && words[0].charAt(1)=='m')
 			topic=words[1];
-		else if (words.length==3 && "how".equals(words[0]) && "about".equals(words[1]))
+		else if (words.length==3 &&
+				"how".equals(words[0]) && "about".equals(words[1]))
 			topic=words[2];
-		else if (words.length==4 && words[0].charAt(0)=='u' && words[0].charAt(1)=='m' && "how".equals(words[1]) && "about".equals(words[2]))
+		else if (words.length==4 &&
+				words[0].charAt(0)=='u' && words[0].charAt(1)=='m' && "how".equals(words[1]) && "about".equals(words[2]))
 			topic=words[3];
 		topic=topic.trim();
 		if (topicComp.containsKey(topic))
