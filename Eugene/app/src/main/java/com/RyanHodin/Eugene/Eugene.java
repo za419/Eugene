@@ -1,28 +1,27 @@
 package com.RyanHodin.Eugene;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
-import android.widget.TextView;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.util.Log;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Build;
 import android.text.InputType;
-import android.content.Context;
-import android.animation.LayoutTransition;
-import java.util.Random;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
 import java.util.HashMap;
-import java.lang.Character;
-import java.lang.Math;
+import java.util.Random;
 
 
 public class Eugene extends Activity
@@ -1299,6 +1298,7 @@ public class Eugene extends Activity
 						{
 							if (actionId==EditorInfo.IME_ACTION_SEND || actionId==EditorInfo.IME_NULL)
 							{
+								ev.setOnEditorActionListener(null); // Disable double input
 								t.inputMessage=ev.getText().toString().trim();
 								Thread proc=new Thread (new Runnable()
 								{
@@ -1474,7 +1474,7 @@ public class Eugene extends Activity
 		feeling=feeling.trim();
 
 		if (feelComp.containsKey(feeling))
-			return ((Integer)feelComp.get(feeling)).intValue();
+			return feelComp.get(feeling).intValue();
 		else
 		{
 			logError("Unknown feeling passed to parseFeeling(): "+feeling);
@@ -1611,7 +1611,7 @@ public class Eugene extends Activity
 			weather=words[4];
 		weather=weather.trim();
 		if (weatherComp.containsKey(weather))
-			return ((Integer)weatherComp.get(weather)).intValue();
+			return weatherComp.get(weather).intValue();
 		else
 		{
 			logError("Unknown weather string passed to parseWeather(): "+weather);
@@ -1723,7 +1723,7 @@ public class Eugene extends Activity
 			topic=words[3];
 		topic=topic.trim();
 		if (topicComp.containsKey(topic))
-			return ((Integer)topicComp.get(topic)).intValue();
+			return topicComp.get(topic).intValue();
 		else
 		{
 			logError("Unknown topic string passed to parseTopic(): "+topic);
