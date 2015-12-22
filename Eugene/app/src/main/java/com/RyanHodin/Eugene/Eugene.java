@@ -1,4 +1,4 @@
-package com.ryan.eugene;
+package com.RyanHodin.Eugene;
 
 import android.app.Activity;
 import android.widget.TextView;
