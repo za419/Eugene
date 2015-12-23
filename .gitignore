@@ -29,3 +29,6 @@ proguard/
 # Backups (git handles this for us)
 *.bak
 *.*~
+
+# The annoying file
+Eugene/.idea/workspace.xml
